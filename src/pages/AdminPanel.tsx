@@ -49,7 +49,7 @@ export default function AdminPanel() {
 
   const markResolved = async (id: string) => {
     try {
-      await fetch(`/api/incidents/${id}/status`, {
+      await fetch(getApiUrl(`/api/incidents/${id}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
