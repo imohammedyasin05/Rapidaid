@@ -12,12 +12,13 @@ import {
 const COLORS = ['#3fb950', '#d29922', '#f85149', '#9b1c1c'];
 
 export default function AdminPanel() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { socket } = useSocket();
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [analytics, setAnalytics] = useState<any>(null);
 
   useEffect(() => {
+    if (user?.email === 'guest@rapidaid.demo') return;
     const fetchData = async () => {
         try {
             const [incRes, anaRes] = await Promise.all([
@@ -87,7 +88,18 @@ export default function AdminPanel() {
         <p className="text-[var(--color-geo-muted)] mt-1">System-wide overview of all reported emergency events.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      {user?.email === 'guest@rapidaid.demo' ? (
+        <div className="bg-[var(--color-geo-surface)] p-12 rounded border border-[var(--color-geo-border)] text-center">
+            <ShieldAlert className="w-16 h-16 text-[var(--color-geo-orange)] mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-white mb-2">Access Restricted</h2>
+            <p className="text-[var(--color-geo-muted)] max-w-md mx-auto">
+                Guest users are not allowed to access system-wide analytics or manage incidents. 
+                Please sign in with an admin account for full access.
+            </p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {[
           { title: 'Total Incidents', value: total, icon: <BarChart3 className="text-blue-500" /> },
           { title: 'Active Response', value: active, icon: <Activity className="text-[var(--color-geo-orange)]" /> },
@@ -250,6 +262,8 @@ export default function AdminPanel() {
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

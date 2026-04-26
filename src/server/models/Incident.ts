@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const incidentSchema = new mongoose.Schema({
-  reporterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  reporterId: { type: mongoose.Schema.Types.Mixed, ref: 'User' },
   location: {
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },

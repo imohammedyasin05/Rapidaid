@@ -69,6 +69,11 @@ export function Navbar() {
                   <span className="ml-2 inline-flex items-center rounded bg-[var(--color-geo-surface-bright)] px-2 py-1 text-[10px] font-bold text-[var(--color-geo-text)] border border-[var(--color-geo-border)] uppercase tracking-widest">
                     {user.role}
                   </span>
+                  {user.email === 'guest@rapidaid.demo' && (
+                    <span className="ml-2 inline-flex items-center rounded bg-blue-900/30 px-2 py-1 text-[10px] font-bold text-blue-400 border border-blue-500/50 uppercase tracking-widest">
+                      Guest Mode
+                    </span>
+                  )}
                 </div>
                 <button
                   onClick={handleLogout}

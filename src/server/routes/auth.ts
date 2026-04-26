@@ -55,4 +55,25 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.post('/guest', async (req, res) => {
+  try {
+    const guestUser = {
+      id: 'guest_' + Math.random().toString(36).substring(7),
+      name: 'Guest User',
+      email: 'guest@rapidaid.demo',
+      role: 'user' // Guests get basic user permissions
+    };
+
+    const token = jwt.sign(
+      { userId: guestUser.id, role: guestUser.role, isGuest: true },
+      JWT_SECRET,
+      { expiresIn: '2h' } // Short duration for guest sessions
+    );
+
+    res.json({ token, user: guestUser });
+  } catch (error) {
+    res.status(500).json({ error: 'Guest login failed' });
+  }
+});
+
 export default router;

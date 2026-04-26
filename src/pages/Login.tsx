@@ -12,6 +12,25 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const handleGuestLogin = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(getApiUrl('/api/auth/guest'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Guest login failed');
+      login(data.token, data.user);
+      navigate('/');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -77,6 +96,20 @@ export default function Login() {
             className="w-full bg-[var(--color-geo-surface-bright)] hover:bg-[var(--color-geo-red)] border border-[var(--color-geo-border)] text-white py-3 rounded font-bold uppercase text-sm tracking-wider flex items-center justify-center gap-2 transition-all">
             {loading ? <Loader2 className="animate-spin h-4 w-4" /> : 'Log in'}
             {!loading && <ArrowRight className="h-4 w-4" />}
+          </button>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[var(--color-geo-border)]"></div></div>
+            <div className="relative flex justify-center text-xs uppercase"><span className="bg-[var(--color-geo-surface)] px-2 text-[var(--color-geo-muted)] font-bold">Or</span></div>
+          </div>
+
+          <button 
+            type="button"
+            onClick={handleGuestLogin}
+            disabled={loading}
+            className="w-full bg-transparent hover:bg-[rgba(255,255,255,0.05)] border border-[var(--color-geo-border)] text-[var(--color-geo-muted)] hover:text-white py-3 rounded font-bold uppercase text-sm tracking-wider flex items-center justify-center gap-2 transition-all"
+          >
+            Continue as Guest
           </button>
         </form>
 
