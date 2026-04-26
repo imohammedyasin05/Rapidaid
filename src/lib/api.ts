@@ -2,7 +2,7 @@
 // In development, we use an empty string to use the current origin (proxied by the server)
 // In production, we use the RENDER_BACKEND_URL provided in the environment variables
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://rapidaid-7tzv.onrender.com';
 
 // If the URL ends with a slash, remove it for consistency
 export const getApiUrl = (path: string) => {
