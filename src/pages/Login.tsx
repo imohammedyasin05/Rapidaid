@@ -63,61 +63,63 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] p-4 bg-[var(--color-geo-bg)] relative overflow-hidden">
-      <div className="w-full max-w-md bg-[var(--color-geo-surface)] p-8 rounded shadow-2xl border border-[var(--color-geo-border)] relative z-10">
-        <div className="text-center mb-8">
+    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] p-4 sm:p-6 bg-[var(--color-geo-bg)] relative overflow-hidden">
+      <div className="w-full max-w-md bg-[var(--color-geo-surface)] p-6 sm:p-8 rounded shadow-2xl border border-[var(--color-geo-border)] relative z-10">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="w-12 h-12 bg-[var(--color-geo-red)] text-white rounded-md flex items-center justify-center mx-auto mb-4 text-2xl font-bold">RA</div>
-          <h2 className="text-2xl font-bold tracking-tight text-white">Sign in to RapidAid</h2>
-          <p className="text-sm text-[var(--color-geo-muted)] mt-2">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">Sign in to RapidAid</h2>
+          <p className="text-xs sm:text-sm text-[var(--color-geo-muted)] mt-2">
             Or <Link to="/register" className="text-[var(--color-geo-text)] underline font-medium hover:text-white">create an account</Link>
           </p>
         </div>
 
-        {error && <div className="mb-4 p-3 bg-[rgba(248,81,73,0.1)] text-[var(--color-geo-red)] border border-[rgba(248,81,73,0.3)] rounded text-sm">{error}</div>}
+        {error && <div className="mb-4 p-3 bg-[rgba(248,81,73,0.1)] text-[var(--color-geo-red)] border border-[rgba(248,81,73,0.3)] rounded text-xs sm:text-sm">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[var(--color-geo-muted)] mb-1.5">Email</label>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--color-geo-muted)] mb-1.5">Email</label>
             <div className="relative">
               <Mail className="absolute left-3 top-2.5 h-5 w-5 text-[var(--color-geo-muted)]" />
               <input type="email" required value={email} onChange={e => setEmail(e.target.value)} 
-                className="w-full pl-10 pr-3 py-2 bg-[var(--color-geo-surface-bright)] border border-[var(--color-geo-border)] text-white rounded focus:ring-1 focus:ring-[var(--color-geo-red)] focus:border-[var(--color-geo-red)] outline-none" />
+                className="w-full pl-10 pr-3 py-2.5 bg-[var(--color-geo-surface-bright)] border border-[var(--color-geo-border)] text-white rounded focus:ring-1 focus:ring-[var(--color-geo-red)] focus:border-[var(--color-geo-red)] outline-none text-sm" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[var(--color-geo-muted)] mb-1.5">Password</label>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--color-geo-muted)] mb-1.5">Password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 h-5 w-5 text-[var(--color-geo-muted)]" />
               <input type="password" required value={password} onChange={e => setPassword(e.target.value)} 
-                className="w-full pl-10 pr-3 py-2 bg-[var(--color-geo-surface-bright)] border border-[var(--color-geo-border)] text-white rounded focus:ring-1 focus:ring-[var(--color-geo-red)] focus:border-[var(--color-geo-red)] outline-none" />
+                className="w-full pl-10 pr-3 py-2.5 bg-[var(--color-geo-surface-bright)] border border-[var(--color-geo-border)] text-white rounded focus:ring-1 focus:ring-[var(--color-geo-red)] focus:border-[var(--color-geo-red)] outline-none text-sm" />
             </div>
           </div>
           <button type="submit" disabled={loading} 
-            className="w-full bg-[var(--color-geo-surface-bright)] hover:bg-[var(--color-geo-red)] border border-[var(--color-geo-border)] text-white py-3 rounded font-bold uppercase text-sm tracking-wider flex items-center justify-center gap-2 transition-all">
+            className="w-full bg-[var(--color-geo-surface-bright)] hover:bg-[var(--color-geo-red)] border border-[var(--color-geo-border)] text-white py-3 sm:py-3.5 rounded font-bold uppercase text-xs sm:text-sm tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
             {loading ? <Loader2 className="animate-spin h-4 w-4" /> : 'Log in'}
             {!loading && <ArrowRight className="h-4 w-4" />}
           </button>
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[var(--color-geo-border)]"></div></div>
-            <div className="relative flex justify-center text-xs uppercase"><span className="bg-[var(--color-geo-surface)] px-2 text-[var(--color-geo-muted)] font-bold">Or</span></div>
+            <div className="relative flex justify-center text-[10px] uppercase"><span className="bg-[var(--color-geo-surface)] px-2 text-[var(--color-geo-muted)] font-bold">Or</span></div>
           </div>
 
           <button 
             type="button"
             onClick={handleGuestLogin}
             disabled={loading}
-            className="w-full bg-transparent hover:bg-[rgba(255,255,255,0.05)] border border-[var(--color-geo-border)] text-[var(--color-geo-muted)] hover:text-white py-3 rounded font-bold uppercase text-sm tracking-wider flex items-center justify-center gap-2 transition-all"
+            className="w-full bg-transparent hover:bg-[rgba(255,255,255,0.05)] border border-[var(--color-geo-border)] text-[var(--color-geo-muted)] hover:text-white py-3 rounded font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-2 transition-all"
           >
             Continue as Guest
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-[var(--color-geo-border)] text-xs text-[var(--color-geo-muted)] text-center">
+        <div className="mt-8 pt-6 border-t border-[var(--color-geo-border)] text-[10px] text-[var(--color-geo-muted)] text-center">
           <p className="font-bold mb-2 uppercase tracking-wide">Demo Accounts (Pass: admin123):</p>
-          <p>Admin: admin.rapidaid@gmail.com</p>
-          <p>Volunteer: volunteer.rapidaid@gmail.com</p>
-          <p>User: user.rapidaid@gmail.com</p>
+          <div className="grid grid-cols-1 gap-1">
+            <p>Admin: admin.rapidaid@gmail.com</p>
+            <p>Volunteer: volunteer.rapidaid@gmail.com</p>
+            <p>User: user.rapidaid@gmail.com</p>
+          </div>
         </div>
       </div>
     </div>

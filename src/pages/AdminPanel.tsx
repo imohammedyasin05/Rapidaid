@@ -199,7 +199,9 @@ export default function AdminPanel() {
         <div className="px-6 py-4 border-b border-[var(--color-geo-border)]">
           <h2 className="font-semibold text-white">Incident Event Log</h2>
         </div>
-        <div className="overflow-x-auto">
+        
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead className="text-xs text-[var(--color-geo-muted)] uppercase tracking-wider bg-[var(--color-geo-surface-bright)] border-b border-[var(--color-geo-border)]">
               <tr>
@@ -215,7 +217,7 @@ export default function AdminPanel() {
               {incidents.map((incident) => (
                 <tr key={incident._id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                   <td className="px-6 py-4 font-mono text-xs text-[var(--color-geo-muted)]">
-                    <div className="font-bold text-[var(--color-geo-text)] truncate w-32">{Math.random().toString(36).substring(2,8).toUpperCase()}</div>
+                    <div className="font-bold text-[var(--color-geo-text)] truncate w-32">{incident._id.substring(incident._id.length - 6).toUpperCase()}</div>
                     {(incident.reporterId as any)?.name || 'Unknown User'}
                   </td>
                   <td className="px-6 py-4">
@@ -251,17 +253,68 @@ export default function AdminPanel() {
                   </td>
                 </tr>
               ))}
-              {incidents.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                    No incidents recorded.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-[var(--color-geo-border)]">
+          {incidents.map((incident) => (
+            <div key={incident._id} className="p-4 space-y-3">
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="font-mono text-xs font-bold text-white mb-1">
+                    #{incident._id.substring(incident._id.length - 6).toUpperCase()}
+                  </div>
+                  <div className="text-xs text-[var(--color-geo-muted)]">
+                    {(incident.reporterId as any)?.name || 'Unknown User'}
+                  </div>
+                </div>
+                <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
+                  incident.severity === 'critical' ? 'bg-[rgba(248,81,73,0.2)] text-[var(--color-geo-red)] border border-[var(--color-geo-red)]' :
+                  incident.severity === 'high' ? 'bg-[rgba(248,81,73,0.1)] text-[var(--color-geo-red)]' :
+                  incident.severity === 'medium' ? 'bg-[rgba(210,153,34,0.2)] text-[var(--color-geo-orange)]' :
+                  'bg-[rgba(63,185,80,0.2)] text-[var(--color-geo-green)]'
+                }`}>
+                  {incident.severity}
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <p className="text-[var(--color-geo-muted)] uppercase tracking-tighter mb-1">Location</p>
+                  <p className="font-mono text-white">{incident.location.lat.toFixed(4)}, {incident.location.lng.toFixed(4)}</p>
+                </div>
+                <div>
+                  <p className="text-[var(--color-geo-muted)] uppercase tracking-tighter mb-1">Time</p>
+                  <p className="text-white">{new Date(incident.createdAt).toLocaleTimeString()}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center pt-2">
+                <span className="capitalize font-semibold text-[var(--color-geo-text)] bg-[var(--color-geo-surface-bright)] border border-[var(--color-geo-border)] px-2 py-1 rounded text-[10px] uppercase tracking-wider">
+                  {incident.status}
+                </span>
+                {incident.status !== 'resolved' && (
+                  <button 
+                    onClick={() => markResolved(incident._id)}
+                    className="text-xs font-bold bg-[var(--color-geo-red)] text-white px-4 py-2 rounded transition shadow-lg shadow-red-900/20"
+                  >
+                    Resolve
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {incidents.length === 0 && (
+          <div className="px-6 py-12 text-center text-[var(--color-geo-muted)]">
+            No incidents recorded.
+          </div>
+        )}
       </div>
+
       </>
       )}
     </div>

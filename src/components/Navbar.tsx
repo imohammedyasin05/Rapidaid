@@ -1,16 +1,19 @@
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Activity, ShieldAlert, LogOut, LayoutDashboard, Map as MapIcon, Users, Settings } from 'lucide-react';
+import { Activity, ShieldAlert, LogOut, LayoutDashboard, Map as MapIcon, Users, Settings, Menu, X } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
+    setIsMobileMenuOpen(false);
     navigate('/login');
   };
 
@@ -90,8 +93,87 @@ export function Navbar() {
               </div>
             )}
           </div>
+
+          {/* Mobile menu button */}
+          <div className="flex items-center sm:hidden">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-[var(--color-geo-muted)] hover:text-white hover:bg-[rgba(255,255,255,0.05)] focus:outline-none"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="sm:hidden bg-[var(--color-geo-surface)] border-t border-[var(--color-geo-border)] overflow-hidden"
+          >
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {getLinks().map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center px-3 py-2 rounded-md text-base font-medium gap-3",
+                    location.pathname === link.path
+                      ? "bg-[rgba(255,255,255,0.05)] text-white"
+                      : "text-[var(--color-geo-muted)] hover:text-white hover:bg-[rgba(255,255,255,0.02)]"
+                  )}
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              ))}
+              {user ? (
+                <div className="border-t border-[var(--color-geo-border)] mt-4 pt-4 px-3 pb-3">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <div className="text-sm font-medium text-white">{user.name}</div>
+                      <div className="text-xs text-[var(--color-geo-muted)]">{user.email}</div>
+                    </div>
+                    <span className="inline-flex items-center rounded bg-[var(--color-geo-surface-bright)] px-2 py-1 text-[10px] font-bold text-[var(--color-geo-text)] border border-[var(--color-geo-border)] uppercase tracking-widest">
+                      {user.role}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 px-3 py-2 text-base font-medium text-[var(--color-geo-red)] hover:bg-[rgba(248,81,73,0.05)] rounded-md transition-colors"
+                  >
+                    <LogOut size={18} />
+                    Log out
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 p-2 border-t border-[var(--color-geo-border)] mt-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex justify-center px-4 py-2 text-sm font-bold text-white border border-[var(--color-geo-border)] rounded hover:bg-[rgba(255,255,255,0.05)]"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex justify-center px-4 py-2 text-sm font-bold text-white bg-[var(--color-geo-red)] rounded hover:opacity-90"
+                  >
+                    Sign up
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
+

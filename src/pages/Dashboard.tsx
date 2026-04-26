@@ -143,20 +143,20 @@ export default function Dashboard() {
   const activeIncidents = incidents.filter(i => i.status !== 'resolved');
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-[calc(100vh-4rem)] flex flex-col">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-geo-text)] flex items-center gap-2">
-            <Activity className="text-[var(--color-geo-red)]" /> Live Operations Dashboard
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 min-h-[calc(100vh-4rem)] flex flex-col gap-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="w-full md:w-auto">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--color-geo-text)] flex items-center gap-2">
+            <Activity className="text-[var(--color-geo-red)] flex-shrink-0" /> Live Operations
           </h1>
-          <p className="text-[var(--color-geo-muted)] text-sm mt-1">Monitoring realtime emergency events and active responders.</p>
+          <p className="text-[var(--color-geo-muted)] text-xs md:text-sm mt-1">Monitoring realtime emergency events.</p>
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <button
             onClick={triggerSOS}
             disabled={isSOSLoading || !userLocation}
-            className="bg-white text-black px-5 py-2.5 rounded font-extrabold flex items-center gap-2 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+            className="w-full sm:w-auto bg-white text-black px-5 py-3 md:py-2.5 rounded font-extrabold flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]"
           >
             {isSOSLoading ? <Loader2 className="animate-spin h-5 w-5" /> : <Zap className="h-5 w-5 fill-current" />}
             EMERGENCY SOS
@@ -165,7 +165,7 @@ export default function Dashboard() {
           <button
             onClick={simulateCrash}
             disabled={isSimulating || !userLocation}
-            className="bg-[var(--color-geo-red)] text-white px-5 py-2.5 rounded font-semibold flex items-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto bg-[var(--color-geo-red)] text-white px-5 py-3 md:py-2.5 rounded font-semibold flex items-center justify-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSimulating ? <Loader2 className="animate-spin h-5 w-5" /> : <Car className="h-5 w-5" />}
             Simulate Crash
@@ -173,11 +173,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1 min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1">
         
         {/* Sidebar */}
-        <div className="bg-[var(--color-geo-surface)] border border-[var(--color-geo-border)] flex flex-col overflow-hidden col-span-1 rounded">
-          <h2 className="font-semibold text-[var(--color-geo-text)] border-b border-[var(--color-geo-border)] pb-3 mb-0 p-4 pb-3 flex items-center gap-2">
+        <div className="bg-[var(--color-geo-surface)] border border-[var(--color-geo-border)] flex flex-col overflow-hidden col-span-1 rounded h-[300px] lg:h-auto order-2 lg:order-1">
+          <h2 className="font-semibold text-[var(--color-geo-text)] border-b border-[var(--color-geo-border)] p-4 flex items-center gap-2 text-sm md:text-base">
             <AlertCircle className="h-4 w-4 text-[var(--color-geo-muted)]" /> Active Incidents ({activeIncidents.length})
           </h2>
           
@@ -215,10 +215,10 @@ export default function Dashboard() {
         </div>
 
         {/* Map Container */}
-        <div className="bg-[#0d1117] rounded border border-[var(--color-geo-border)] col-span-1 lg:col-span-3 min-h-[400px] relative overflow-hidden">
+        <div className="bg-[#0d1117] rounded border border-[var(--color-geo-border)] col-span-1 lg:col-span-3 min-h-[350px] md:min-h-[450px] relative overflow-hidden order-1 lg:order-2">
           <div className="absolute inset-0 z-0 opacity-30 pointer-events-none" style={{ backgroundImage: 'linear-gradient(var(--color-geo-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-geo-border) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
           {!userLocation && (
-            <div className="absolute inset-0 z-[1000] bg-[#0d1117]/80 backdrop-blur-sm flex flex-col items-center justify-center">
+            <div className="absolute inset-0 z-[1000] bg-[#0d1117]/80 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center">
               <Loader2 className="animate-spin text-[var(--color-geo-red)] h-8 w-8 mb-4" />
               <p className="text-[var(--color-geo-text)] font-semibold">Acquiring GPS location...</p>
               <p className="text-[var(--color-geo-muted)] text-sm mt-1">Please allow location permissions.</p>
@@ -229,7 +229,7 @@ export default function Dashboard() {
           {/* AI Guide Overlay */}
           <AnimatePresence>
             {showFirstAid && (
-               <div className="absolute top-4 right-4 z-[1001] w-80">
+               <div className="absolute top-4 right-4 left-4 sm:left-auto z-[1001] sm:w-80">
                 <FirstAidGuide 
                    severity={showFirstAid.severity} 
                    steps={showFirstAid?.steps}
@@ -248,17 +248,17 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-6 right-6 max-w-sm bg-[var(--color-geo-surface)] border-l-4 border-[var(--color-geo-red)] shadow-2xl rounded p-4 z-50 flex gap-4"
+            className="fixed bottom-4 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm bg-[var(--color-geo-surface)] border-l-4 border-[var(--color-geo-red)] shadow-2xl rounded p-4 z-50 flex gap-4"
           >
-            <div className="bg-[rgba(248,81,73,0.1)] p-2 rounded h-fit text-[var(--color-geo-red)]">
+            <div className="bg-[rgba(248,81,73,0.1)] p-2 rounded h-fit text-[var(--color-geo-red)] flex-shrink-0">
               <ShieldAlert className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="text-white font-bold">New {notification.severity} severity incident!</h3>
-              <p className="text-[var(--color-geo-text)] text-sm mt-1">
+              <h3 className="text-white font-bold text-sm md:text-base">New {notification.severity} severity incident!</h3>
+              <p className="text-[var(--color-geo-text)] text-xs md:text-sm mt-1">
                 A potential collision has been detected. AI estimates high risk of severe injury.
               </p>
-              <div className="mt-2 text-xs text-[var(--color-geo-muted)]">
+              <div className="mt-2 text-[10px] text-[var(--color-geo-muted)]">
                 {new Date(notification.createdAt).toLocaleTimeString()} • Auto-verified
               </div>
             </div>
