@@ -185,27 +185,35 @@ router.post('/simulate', authenticate, async (req: any, res: any) => {
 router.patch('/:id/status', authenticate, async (req: any, res: any) => {
     try {
       const { status } = req.body;
-      const incident = await Incident.findById(req.params.id);
+      const { id } = req.params;
+
+      console.log(`[Backend] Updating incident ${id} to ${status}`);
       
-      if (!incident) return res.status(404).json({ error: 'Not found' });
+      const incident = await Incident.findByIdAndUpdate(
+          id,
+          { 
+              status, 
+              resolvedAt: status === 'resolved' ? new Date() : undefined 
+          },
+          { new: true }
+      );
       
-      incident.status = status;
-      if (status === 'resolved') {
-          incident.resolvedAt = new Date();
+      if (!incident) {
+          return res.status(404).json({ error: 'Incident not found' });
       }
       
       if (status === 'responding' && req.user.role === 'volunteer') {
           if (!incident.responders.includes(req.user.userId)) {
              incident.responders.push(req.user.userId);
+             await incident.save();
           }
       }
-      
-      await incident.save();
       
       // Emit status update
       req.io.emit('incident_updated', incident);
       res.json(incident);
     } catch (error) {
+      console.error('[Backend] Status update failed:', error);
       res.status(500).json({ error: 'Failed to update' });
     }
 });

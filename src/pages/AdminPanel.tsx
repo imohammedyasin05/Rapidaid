@@ -48,6 +48,7 @@ export default function AdminPanel() {
   }, [socket]);
 
   const markResolved = async (id: string) => {
+    console.log(`[Frontend] Resolving incident: ${id}`);
     try {
       const res = await fetch(getApiUrl(`/api/incidents/${id}/status`), {
         method: 'PATCH',
@@ -58,12 +59,19 @@ export default function AdminPanel() {
         body: JSON.stringify({ status: 'resolved' })
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        const updated = await res.json();
-        setIncidents(prev => prev.map(inc => inc._id === id ? updated : inc));
+        console.log("[Frontend] Successfully resolved:", data);
+        // Immediate UI Update
+        setIncidents(prev => prev.map(inc => inc._id === id ? data : inc));
+      } else {
+        console.error("[Frontend] Resolve failed:", data.error);
+        alert(`Failed to resolve: ${data.error}`);
       }
     } catch (err) {
-      console.error(err);
+      console.error("[Frontend] Network error:", err);
+      alert("Network error while resolving incident.");
     }
   };
 
