@@ -49,7 +49,7 @@ export default function AdminPanel() {
 
   const markResolved = async (id: string) => {
     try {
-      await fetch(getApiUrl(`/api/incidents/${id}/status`), {
+      const res = await fetch(getApiUrl(`/api/incidents/${id}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -57,6 +57,11 @@ export default function AdminPanel() {
         },
         body: JSON.stringify({ status: 'resolved' })
       });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setIncidents(prev => prev.map(inc => inc._id === id ? updated : inc));
+      }
     } catch (err) {
       console.error(err);
     }
