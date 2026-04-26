@@ -11,7 +11,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const newSocket = io();
+    const newSocket = io(import.meta.env.VITE_API_URL || undefined);
     setSocket(newSocket);
 
     return () => {

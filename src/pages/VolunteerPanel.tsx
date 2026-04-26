@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import { getApiUrl } from '../lib/api';
 import { Incident } from '../types';
 import { MapPin, Navigation, CheckCircle, Clock } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -37,7 +38,7 @@ export default function VolunteerPanel() {
   }, [isResponding, socket, user]);
 
   useEffect(() => {
-    fetch('/api/incidents', {
+    fetch(getApiUrl('/api/incidents'), {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -64,7 +65,7 @@ export default function VolunteerPanel() {
 
   const acceptIncident = async (id: string) => {
     try {
-      await fetch(`/api/incidents/${id}/status`, {
+      await fetch(getApiUrl(`/api/incidents/${id}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

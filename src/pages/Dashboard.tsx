@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import { getApiUrl } from '../lib/api';
 import { Incident } from '../types';
 import MapView from '../components/MapView';
 import FirstAidGuide from '../components/FirstAidGuide';
@@ -21,7 +22,7 @@ export default function Dashboard() {
 
   // Fetch initial incidents and location
   useEffect(() => {
-    fetch('/api/incidents', {
+    fetch(getApiUrl('/api/incidents'), {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -83,7 +84,7 @@ export default function Dashboard() {
     if (!userLocation) return alert("Waiting for location...");
     setIsSOSLoading(true);
     try {
-        const res = await fetch('/api/incidents/sos', {
+        const res = await fetch(getApiUrl('/api/incidents/sos'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -114,7 +115,7 @@ export default function Dashboard() {
     const impactForce = Math.floor(Math.random() * 80) + 10; 
     
     try {
-      const res = await fetch('/api/incidents/simulate', {
+      const res = await fetch(getApiUrl('/api/incidents/simulate'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

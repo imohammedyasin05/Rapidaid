@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import { getApiUrl } from '../lib/api';
 import { Incident } from '../types';
 import { BarChart3, Activity, Users, ShieldCheck, CheckCircle, TrendingUp, PieChart as PieChartIcon } from 'lucide-react';
 import { 
@@ -20,8 +21,8 @@ export default function AdminPanel() {
     const fetchData = async () => {
         try {
             const [incRes, anaRes] = await Promise.all([
-                fetch('/api/incidents', { headers: { Authorization: `Bearer ${token}` } }),
-                fetch('/api/incidents/analytics', { headers: { Authorization: `Bearer ${token}` } })
+                fetch(getApiUrl('/api/incidents'), { headers: { Authorization: `Bearer ${token}` } }),
+                fetch(getApiUrl('/api/incidents/analytics'), { headers: { Authorization: `Bearer ${token}` } })
             ]);
             setIncidents(await incRes.json());
             setAnalytics(await anaRes.json());

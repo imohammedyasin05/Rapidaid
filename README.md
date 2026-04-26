@@ -126,6 +126,33 @@ npm run dev
 
 ---
 
+## 🌍 Deployment Guide
+
+### 1. Backend Deployment (Render)
+1. **Create a new Web Service** on [Render](https://render.com/).
+2. Connect your GitHub repository.
+3. **Environment**: `Node`
+4. **Build Command**: `npm install`
+5. **Start Command**: `npm run dev` (or `tsx server.ts`)
+   > Note: For production, you should ideally compile to JS, but `tsx` works for quick deployments.
+6. **Environment Variables**:
+   - `PORT`: `3000` (Render will handle this automatically)
+   - `MONGODB_URI`: Your MongoDB Atlas connection string.
+   - `JWT_SECRET`: A long random string.
+   - `GEMINI_API_KEY`: Your Google Gemini API key.
+   - `FRONTEND_URL`: The URL of your deployed Vercel frontend.
+
+### 2. Frontend Deployment (Vercel)
+1. **Create a new Project** on [Vercel](https://vercel.com/).
+2. Connect your GitHub repository.
+3. **Framework Preset**: `Vite`
+4. **Build Command**: `npm run build`
+5. **Output Directory**: `dist`
+6. **Environment Variables**:
+   - `VITE_API_URL`: The URL of your deployed Render backend (e.g., `https://rapidaid-api.onrender.com`).
+
+---
+
 ## 🛠️ Usage
 
 1. **Report an Incident**: Navigate to the Dashboard, click "Report Emergency," and provide details.

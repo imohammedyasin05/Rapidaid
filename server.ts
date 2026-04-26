@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import http from 'http';
@@ -5,11 +6,8 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-dotenv.config();
 
 if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_actual_gemini_api_key_here') {
   console.warn('⚠️ WARNING: GEMINI_API_KEY is not set or is placeholder. AI features will use fallback responses.');
@@ -18,7 +16,7 @@ if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_actual_g
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Import API routes (we will create these next)
+// Import API routes
 import authRoutes from './src/server/routes/auth.js';
 import incidentRoutes from './src/server/routes/incidents.js';
 
@@ -26,13 +24,19 @@ async function startServer() {
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server, {
-    cors: { origin: '*' }
+    cors: { 
+        origin: process.env.FRONTEND_URL || '*',
+        methods: ["GET", "POST", "PATCH"]
+    }
   });
 
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3000;
 
   // Middleware
-  app.use(cors());
+  app.use(cors({
+    origin: process.env.FRONTEND_URL || '*',
+    credentials: true
+  }));
   app.use(express.json());
 
   // Database Connection
@@ -42,12 +46,11 @@ async function startServer() {
     if (mongoUri) {
       try {
         console.log('Attempting to connect to provided MONGODB_URI...');
-        // Set a timeout for the connection attempt to fail faster if non-whitelisted
         await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 });
         console.log('Connected successfully to external MongoDB.');
       } catch (err) {
         console.error('External MongoDB connection failed. Falling back to Memory Server. Error:', (err as Error).message);
-        mongoUri = null; // Reset to trigger memory server fallback
+        mongoUri = null;
       }
     }
 
@@ -59,7 +62,7 @@ async function startServer() {
       console.log(`Connected to In-Memory MongoDB at ${mongoUri}`);
     }
 
-    // Seed Demo Users if they don't exist
+    // Seed Demo Users
     const { User } = await import('./src/server/models/User.js');
     const bcrypt = await import('bcryptjs');
     const adminExists = await User.findOne({ email: 'admin.rapidaid@gmail.com' });
@@ -82,8 +85,6 @@ async function startServer() {
     console.log('A client connected:', socket.id);
     
     socket.on('update_location', (data) => {
-        // Broadcast location to all clients (for demo relative simplicity)
-        // In production, we'd room-base this or filter
         io.emit('responder_location', {
             userId: data.userId,
             name: data.name,
@@ -97,7 +98,7 @@ async function startServer() {
     });
   });
 
-  // Attach socket io to request so routes can broadcast
+  // Attach socket io to request
   app.use((req, res, next) => {
     // @ts-ignore
     req.io = io;
@@ -110,26 +111,30 @@ async function startServer() {
 
   // Health endpoint
   app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok' });
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
   // Vite middleware for development
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !process.env.STANDALONE_BACKEND) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
-  } else {
+  } else if (process.env.SERVE_FRONTEND === 'true') {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
+  } else {
+    app.get('/', (req, res) => {
+        res.json({ message: 'RapidAid API is running', status: 'online' });
+    });
   }
 
-  server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  server.listen(Number(PORT), '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
   });
 }
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Activity, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import { getApiUrl } from '../lib/api';
 
 export default function Login() {
   const [email, setEmail] = useState('admin.rapidaid@gmail.com');
@@ -23,7 +24,7 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
