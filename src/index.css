@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-geo-bg: #0a0b10;
+  --color-geo-surface: #161b22;
+  --color-geo-surface-bright: #21262d;
+  --color-geo-red: #f85149;
+  --color-geo-orange: #d29922;
+  --color-geo-green: #3fb950;
+  --color-geo-text: #c9d1d9;
+  --color-geo-muted: #8b949e;
+  --color-geo-border: rgba(255, 255, 255, 0.1);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--color-geo-bg);
+  color: var(--color-geo-text);
+  font-family: var(--font-sans);
+}
+

@@ -1,0 +1,8 @@
+{
+  "name": "RapidAid",
+  "description": "AI-Powered Real-Time Road Accident and Emergency Response Platform",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}
