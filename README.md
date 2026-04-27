@@ -51,16 +51,16 @@ RapidAid provides a unified ecosystem that:
 ## 📸 Interface Previews
 
 ### 🏠 Dashboard
-![Dashboard](public/dashboard.png)
+![Dashboard](public/dashboard-thumb.png)
 
 ### 📍 Incident Mapping
-![Incident Mapping](public/incident-mapping.png)
+![Incident Mapping](public/incident-mapping-thumb.png)
 
 ### 👥 Volunteer Panel
-![Volunteer Panel](public/volunteer-panel.png)
+![Volunteer Panel](public/volunteer-panel-thumb.png)
 
 ### 📊 Admin Analytics
-![Admin Analytics](public/admin-analytics.png)
+![Admin Analytics](public/admin-analytics-thumb.png)
 
 ---
 
